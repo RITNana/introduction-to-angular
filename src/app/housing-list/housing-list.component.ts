@@ -9,22 +9,35 @@ import { HousingLocation } from '../housing-location';
 export class HousingListComponent implements OnInit {
 
   @Input() locationList: HousingLocation[] = [];
-  results: HousingLocation[] = [];
+  @Output() locationSelectedEvent = new EventEmitter<HousingLocation>()
 
-  @Output() locationSelectedEvent = new EventEmitter<HousingLocation>();
-
+  results: HousingLocation[] = []
   constructor() { }
+  searchHousingLocations(searchText: string) {
+    if (!searchText) return
+    // console.log(searchText)
+
+    // use the array filter method and only aqccept values tha contain the searchText 
+    // these values are compared by turning the, to lower case too
+    this.results = this.locationList.filter(
+      (location: HousingLocation) => location.city 
+      .toLowerCase()
+      .includes(
+        searchText.toLowerCase()
+      )
+    )
+  }
+
+
+
+
+   selectHousingLocation(location: HousingLocation){
+    this.locationSelectedEvent.emit(location)
+  }
 
   ngOnInit(): void {
   }
 
-  searchHousingLocations(searchText: string) {
-    if (!searchText) return;
 
-    this.results = this.locationList.filter((location: any) => location.city.toLowerCase().includes(searchText.toLowerCase()));
-  }
-
-  selectHousingLocation(location: HousingLocation) {
-    this.locationSelectedEvent.emit(location);
-  }
+ 
 }
